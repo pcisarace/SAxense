@@ -4,8 +4,7 @@
 ### Usage (assuming DualSenses):
 ```sh
 # Play a local file
-ffmpeg -re -i /path/to/audio.mp3 -ac 2 -ar 3000 -f s8 - | ./SAxense | ls /sys/devices/virtual/misc/uhid/0005:054C:0CE6.*/hidraw | sed 's|^|/dev/|' | xargs -or -- tee > /dev/null
-
+ffmpeg -re -i /path/to/file.mp3 -ac 2 -ar 3000 -f s8 - | ./SAxense > $(ls /sys/devices/virtual/misc/uhid/0005:054C:0CE6.*/hidraw | sed 's|^|/dev/|')
 # Capture loopback as haptics
 pw-record -P '{ stream.capture.sink=true }' --format s8 --rate 3000 - | ./SAxense | ls /sys/devices/virtual/misc/uhid/0005:054C:0CE6.*/hidraw | sed 's|^|/dev/|' | xargs -or -- tee > /dev/null
 ```

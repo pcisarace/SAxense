@@ -18,6 +18,8 @@
 
 #define REPORT_SIZE	141
 #define REPORT_ID	0x32
+	// 0x32 is hd haptics
+	// 0x37 ????
 #define SAMPLE_SIZE	64
 #define SAMPLE_RATE	3000
 
@@ -57,9 +59,11 @@ struct __attribute__((packed)) report {
 } *report;
 
 uint8_t *sample, *ii;
+char *print_buff;
 
 static void proc(int) {
 	fwrite_unlocked(report, sizeof(*report), 1, stdout);
+
 
 	if (!fread_unlocked(sample, sizeof(*sample), SAMPLE_SIZE, stdin)) exit(0);
 
@@ -68,6 +72,17 @@ static void proc(int) {
 }
 
 int main() {
+	/*
+	struct packet tmp = {
+		.pid = 0x11,
+		.unk = 1,
+		.sized = 1,
+	};
+
+	fprintf(stderr,"hi %x \n",tmp);
+	return 0;
+	*/
+	print_buff = (char*)malloc(1024 * sizeof(char));
 	setbuf(stdin, NULL);
 	setbuf(stdout, NULL);
 	mlockall(MCL_CURRENT | MCL_FUTURE);
@@ -113,6 +128,7 @@ int main() {
 	timer_settime(timerid, 0, &ts, NULL);
 
 	for (;;) sleep(3600);
+	
 }
 
 // by Sdore, 2025
